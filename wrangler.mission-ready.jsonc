@@ -1,0 +1,55 @@
+// Per-client deploy config for Mission Ready Repairs (Clay Bucy).
+// See CLIENTS.md for the multi-client pattern. Deploy with:
+//   bun run build && bunx wrangler deploy -c wrangler.mission-ready.jsonc
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "quickmail-mission-ready",
+	"main": ".svelte-kit/cloudflare/_worker.js",
+	"compatibility_date": "2025-06-01",
+	"compatibility_flags": ["nodejs_compat", "enable_nodejs_http_modules"],
+	"workers_dev": false,
+
+	"routes": [
+		{
+			"pattern": "mail.missionready.repair",
+			"custom_domain": true
+		}
+	],
+
+	"assets": {
+		"directory": ".svelte-kit/cloudflare",
+		"binding": "ASSETS"
+	},
+
+	"vars": {
+		"EMAIL_PROVIDER": "cloudflare",
+		"CLOUDFLARE_MAIL_DOMAINS": "missionready.repair"
+	},
+
+	"send_email": [
+		{
+			"name": "EMAIL",
+			"remote": true
+		}
+	],
+
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "quickmail-mission-ready",
+			"database_id": "7420a006-7bc9-449b-b0b8-13c0f6ab8f90",
+			"migrations_dir": "migrations"
+		}
+	],
+
+	"r2_buckets": [
+		{
+			"binding": "ATTACHMENTS",
+			"bucket_name": "quickmail-mission-ready-attachments"
+		}
+	],
+
+	"observability": {
+		"enabled": true
+	}
+}
