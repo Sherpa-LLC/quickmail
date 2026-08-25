@@ -16,7 +16,9 @@ jobs:
     name: Verify the template
     # Public fork pull requests must never execute code on Sherpa's network.
     if: github.event_name != 'pull_request_target' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, Linux, ARM64, mission-surrender-bot-public]
+    runs-on:
+      group: Mission Surrender Public
+      labels: [self-hosted, Linux, ARM64, mission-surrender-bot-public]
     steps:
       - uses: actions/checkout@v5
         with:
