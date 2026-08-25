@@ -20,7 +20,9 @@ permissions:
 jobs:
   release:
     name: Package and publish
-    runs-on: [self-hosted, Linux, ARM64, mission-surrender-bot-public]
+    runs-on:
+      group: Mission Surrender Public
+      labels: [self-hosted, Linux, ARM64, mission-surrender-bot-public]
     steps:
       - uses: actions/checkout@v5
         with:
