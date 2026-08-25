@@ -3,15 +3,24 @@ name: CI
 on:
   push:
     branches: [main]
-  pull_request:
+  # Evaluate the fork guard from the trusted base branch, not a PR-controlled
+  # workflow definition. The job below still tests same-repository PR code.
+  pull_request_target:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   verify:
     name: Verify the template
-    runs-on: ubuntu-latest
+    # Public fork pull requests must never execute code on Sherpa's network.
+    if: github.event_name != 'pull_request_target' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, Linux, ARM64, mission-surrender-bot-public]
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'pull_request_target' && format('refs/pull/{0}/merge', github.event.pull_request.number) || github.sha }}
 
       - uses: oven-sh/setup-bun@v2
         with:
